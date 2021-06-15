@@ -20,19 +20,27 @@ terraform {
   }
 }
 
-
 provider "aws" {
   region = "us-east-1"
 }
 
+data "aws_ami" "amazon-linux-2" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
+  }
+  owners =  ["amazon"]
+}
 
 
 resource "random_pet" "sg" {}
 
 resource "aws_instance" "web" {
-  ami                    = "ami-0aeeebd8d2ab47354"
-  instance_type          = "t3.micro"
-  vpc_security_group_ids = [aws_security_group.web-sg.id]
+  ami                    = data.aws_ami.amazon-linux-2.id
+  instance_type          = "t3.medium"
+  vpc_security_group_ids = ["sg-0318e8365e2eb2bf8"]
+  subnet_id = "subnet-02209f26178602a99"
 
   user_data = <<-EOF
               #!/bin/bash
@@ -43,6 +51,7 @@ resource "aws_instance" "web" {
 
 resource "aws_security_group" "web-sg" {
   name = "${random_pet.sg.id}-sg"
+  vpc_id      = "vpc-0cce9ff1d20494f61"
   ingress {
     from_port   = 8080
     to_port     = 8080
