@@ -12,7 +12,7 @@ terraform {
   required_version = "~> 0.14"
 
   backend "remote" {
-    organization = "lmb-aws-terraform"
+    organization = "gh-actions-demo"
 
     workspaces {
       name = "gh-actions-demo"
@@ -20,11 +20,15 @@ terraform {
   }
 }
 
+
 provider "aws" {
   region = "us-east-1"
 }
 
+
+
 resource "random_pet" "sg" {}
+
 
 resource "aws_instance" "web" {
   ami                    = "ami-0dbd8c88f9060cf71"
