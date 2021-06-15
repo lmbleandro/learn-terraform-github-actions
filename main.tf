@@ -24,20 +24,10 @@ provider "aws" {
   region = "us-east-1"
 }
 
-data "aws_ami" "amazon-linux-2" {
-  most_recent = true
-  filter {
-    name   = "name"
-    values = ["amzn2-ami-ecs-hvm-*-x86_64-ebs"]
-  }
-  owners =  ["amazon"]
-}
-
-
 resource "random_pet" "sg" {}
 
 resource "aws_instance" "web" {
-  ami                    = data.aws_ami.amazon-linux-2.id
+  ami                    = "ami-0dbd8c88f9060cf71"
   instance_type          = "t3.medium"
   vpc_security_group_ids = ["sg-0318e8365e2eb2bf8"]
   subnet_id = "subnet-02209f26178602a99"
